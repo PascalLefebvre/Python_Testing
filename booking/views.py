@@ -1,3 +1,4 @@
+import os
 import json
 from flask import render_template, request, redirect, flash, url_for
 
@@ -6,6 +7,7 @@ from dotenv import load_dotenv
 from booking import app
 
 load_dotenv()
+app.secret_key = os.environ.get("SECRET_KEY", "something_special")
 
 
 def loadClubs():
