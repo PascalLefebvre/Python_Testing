@@ -11,13 +11,13 @@ app.secret_key = os.environ.get("SECRET_KEY", "something_special")
 
 
 def loadClubs():
-    with open("static/clubs.json") as c:
+    with open("data/clubs.json") as c:
         listOfClubs = json.load(c)["clubs"]
         return listOfClubs
 
 
 def loadCompetitions():
-    with open("static/competitions.json") as comps:
+    with open("data/competitions.json") as comps:
         listOfCompetitions = json.load(comps)["competitions"]
         return listOfCompetitions
 
