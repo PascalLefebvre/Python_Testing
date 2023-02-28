@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 
 from booking import app
 
+
 load_dotenv()
 app.secret_key = os.environ.get("SECRET_KEY", "something_special")
 
@@ -62,23 +63,36 @@ def book(competition, club):
 
 @app.route("/purchasePlaces", methods=["POST"])
 def purchasePlaces():
+    http_response_code = 200
     competition = [
         c for c in competitions if c["name"] == request.form["competition"]
     ][0]
     club = [c for c in clubs if c["name"] == request.form["club"]][0]
     placesRequired = int(request.form["places"])
     if placesRequired <= int(club["points"]):
-        competition["numberOfPlaces"] = (
-            int(competition["numberOfPlaces"]) - placesRequired
-        )
-        flash("Great-booking complete !")
+        if placesRequired <= int(competition["numberOfPlaces"]):
+            competition["numberOfPlaces"] = (
+                int(competition["numberOfPlaces"]) - placesRequired
+            )
+            flash(
+                f"Great-booking complete ! You booked {placesRequired} places \
+                  for the {competition['name']} competition."
+            )
+        else:
+            http_response_code = 403
+            flash(
+                f"Booking not possible ! You are trying to book more places \
+                  than available for the {competition['name']} competition."
+            )
     else:
+        http_response_code = 403
         flash(
-            f"You don't have enough points ! You want to book {placesRequired}\
-              places but you have only {club['points']} points."
+            f"Booking failure ! You want to book {placesRequired} places but \
+              you have only {club['points']} points."
         )
-    return render_template(
-        "welcome.html", club=club, competitions=competitions
+    return (
+        render_template("welcome.html", club=club, competitions=competitions),
+        http_response_code,
     )
 
 

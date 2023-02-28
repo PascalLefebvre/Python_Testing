@@ -54,6 +54,7 @@ class TestPurchasePlaces:
         }
         response = client.post("/purchasePlaces", data=request_data)
         response_data = response.data.decode()
+        assert response.status_code == 200
         assert "Great-booking complete !" in response_data
 
     def test_purchase_places_without_enough_points(
@@ -68,4 +69,20 @@ class TestPurchasePlaces:
         }
         response = client.post("/purchasePlaces", data=request_data)
         response_data = response.data.decode()
-        assert "You don&#39;t have enough points !" in response_data
+        assert response.status_code == 403
+        assert "Booking failure !" in response_data
+
+    def test_purchase_more_places_than_available(
+        self, client, load_clubs, load_competitions
+    ):
+        """Test if the failure message is displayed when a club is trying to
+        book more places than available for the competition."""
+        request_data = {
+            "club": load_clubs[0]["name"],
+            "competition": load_competitions[1]["name"],
+            "places": "5",
+        }
+        response = client.post("/purchasePlaces", data=request_data)
+        response_data = response.data.decode()
+        assert response.status_code == 403
+        assert "Booking not possible !" in response_data

@@ -32,6 +32,11 @@ def load_competitions(monkeypatch):
             "date": "2022-10-30 09:00:00",
             "numberOfPlaces": "15",
         },
+        {
+            "name": "Bionic Brutes Of Strength",
+            "date": "2023-03-12 09:00:00",
+            "numberOfPlaces": "4",
+        },
     ]
     monkeypatch.setattr(booking.views, "competitions", competitions)
     return competitions
