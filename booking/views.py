@@ -38,7 +38,7 @@ def showSummary():
             club for club in clubs if club["email"] == request.form["email"]
         ][0]
     except IndexError:
-        return render_template("unknown_email.html")
+        return render_template("unknown_email.html"), 404
     else:
         return render_template(
             "welcome.html", club=club, competitions=competitions
@@ -67,10 +67,16 @@ def purchasePlaces():
     ][0]
     club = [c for c in clubs if c["name"] == request.form["club"]][0]
     placesRequired = int(request.form["places"])
-    competition["numberOfPlaces"] = (
-        int(competition["numberOfPlaces"]) - placesRequired
-    )
-    flash("Great-booking complete!")
+    if placesRequired <= int(club["points"]):
+        competition["numberOfPlaces"] = (
+            int(competition["numberOfPlaces"]) - placesRequired
+        )
+        flash("Great-booking complete !")
+    else:
+        flash(
+            f"You don't have enough points ! You want to book {placesRequired}\
+              places but you have only {club['points']} points."
+        )
     return render_template(
         "welcome.html", club=club, competitions=competitions
     )

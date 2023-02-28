@@ -2,9 +2,13 @@ bin
 include
 lib
 .Python
-tests/
 .envrc
 __pycache__
 .venv/
 .env
+<<<<<<< HEAD
 .coverage
+=======
+.coverage
+htmlcov/
+>>>>>>> bug/use-more-than-points-allowed
