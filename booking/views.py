@@ -90,6 +90,7 @@ def purchasePlaces():
             competition["numberOfPlaces"] = (
                 int(competition["numberOfPlaces"]) - placesRequired
             )
+            club["points"] = str(int(club["points"]) - placesRequired)
             flash(
                 f"Great-booking complete ! You booked {placesRequired} places \
                   for the {competition['name']} competition."

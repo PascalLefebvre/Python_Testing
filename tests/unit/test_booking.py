@@ -105,3 +105,22 @@ class TestPurchasePlaces:
         response_data = response.data.decode()
         assert response.status_code == 403
         assert f"{MAX_NUMBER_RESERVED_PLACES} places" in response_data
+
+    def test_update_points_if_purchased_places(
+        self, client, load_clubs, load_competitions
+    ):
+        """When a club secretary redeems points for places in a competition,
+        test if the amount of points used is deducted from the club's balance.
+        """
+        points_before_purchase = int(load_clubs[0]["points"])
+        places = "4"
+        request_data = {
+            "club": load_clubs[0]["name"],
+            "competition": load_competitions[0]["name"],
+            "places": places,
+        }
+        response = client.post("/purchasePlaces", data=request_data)
+        # response_data = response.data.decode()
+        points_after_purchase = int(load_clubs[0]["points"])
+        assert response.status_code == 200
+        assert points_after_purchase == points_before_purchase - int(places)
