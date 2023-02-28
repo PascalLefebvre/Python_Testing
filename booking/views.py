@@ -7,6 +7,8 @@ from dotenv import load_dotenv
 from booking import app
 
 
+MAX_NUMBER_RESERVED_PLACES = 12
+
 load_dotenv()
 app.secret_key = os.environ.get("SECRET_KEY", "something_special")
 
@@ -69,6 +71,20 @@ def purchasePlaces():
     ][0]
     club = [c for c in clubs if c["name"] == request.form["club"]][0]
     placesRequired = int(request.form["places"])
+
+    if placesRequired > MAX_NUMBER_RESERVED_PLACES:
+        http_response_code = 403
+        flash(
+            f"/!\\ Booking failure ! You are trying to book more than \
+              {MAX_NUMBER_RESERVED_PLACES} places for a competition."
+        )
+        return (
+            render_template(
+                "welcome.html", club=club, competitions=competitions
+            ),
+            http_response_code,
+        )
+
     if placesRequired <= int(club["points"]):
         if placesRequired <= int(competition["numberOfPlaces"]):
             competition["numberOfPlaces"] = (
@@ -81,14 +97,14 @@ def purchasePlaces():
         else:
             http_response_code = 403
             flash(
-                f"Booking not possible ! You are trying to book more places \
+                f"/!\\ Booking failure ! You are trying to book more places \
                   than available for the {competition['name']} competition."
             )
     else:
         http_response_code = 403
         flash(
-            f"Booking failure ! You want to book {placesRequired} places but \
-              you have only {club['points']} points."
+            f"/!\\ Booking failure ! You want to book {placesRequired} places \
+              but you have only {club['points']} points."
         )
     return (
         render_template("welcome.html", club=club, competitions=competitions),
