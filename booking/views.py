@@ -96,10 +96,21 @@ def purchasePlaces():
         c for c in competitions if c["name"] == request.form["competition"]
     ][0]
     club = [c for c in clubs if c["name"] == request.form["club"]][0]
-    placesRequired = int(request.form["places"])
+    try:
+        placesRequired = int(request.form["places"])
+    except ValueError:
+        flash(
+            f"/!\\ You have not indicated the number of places you wish to \
+              book for the {competition['name']} competition !"
+        )
+        return (
+            render_template(
+                "welcome.html", club=club, competitions=competitions
+            ),
+            403,
+        )
 
     if placesRequired > MAX_NUMBER_RESERVED_PLACES:
-        http_response_code = 403
         flash(
             f"/!\\ Booking failure ! You are trying to book more than \
               {MAX_NUMBER_RESERVED_PLACES} places for a competition."
@@ -108,7 +119,7 @@ def purchasePlaces():
             render_template(
                 "welcome.html", club=club, competitions=competitions
             ),
-            http_response_code,
+            403,
         )
 
     if placesRequired <= int(club["points"]):

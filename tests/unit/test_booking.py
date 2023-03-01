@@ -105,6 +105,21 @@ class TestPurchasePlaces:
         assert response.status_code == 200
         assert points_after_purchase == points_before_purchase - int(places)
 
+    def test_purchase_places_if_places_field_is_empty(
+        self, client, load_clubs, load_competitions
+    ):
+        """Test if the HTTP response code is 403 and and the error message is \
+           displayed when the places field is not filled."""
+        request_data = {
+            "club": load_clubs[0]["name"],
+            "competition": load_competitions[0]["name"],
+            "places": "",
+        }
+        response = client.post("/purchasePlaces", data=request_data)
+        response_data = response.data.decode()
+        assert response.status_code == 403
+        assert "You have not indicated the number of places" in response_data
+
 
 class TestBookPlaces:
     """Test the '/book/<competition>/<club>' endpoint."""
