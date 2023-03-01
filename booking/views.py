@@ -1,7 +1,8 @@
 import os
+from datetime import datetime
 import json
-from flask import render_template, request, redirect, flash, url_for
 
+from flask import render_template, request, redirect, flash, url_for
 from dotenv import load_dotenv
 
 from booking import app
@@ -41,7 +42,10 @@ def showSummary():
             club for club in clubs if club["email"] == request.form["email"]
         ][0]
     except IndexError:
-        return render_template("unknown_email.html"), 404
+        flash(
+            "Oups ! The email address is unknown. Please select a good one ..."
+        )
+        return render_template("messages.html"), 404
     else:
         return render_template(
             "welcome.html", club=club, competitions=competitions
@@ -50,17 +54,39 @@ def showSummary():
 
 @app.route("/book/<competition>/<club>")
 def book(competition, club):
-    foundClub = [c for c in clubs if c["name"] == club][0]
-    foundCompetition = [c for c in competitions if c["name"] == competition][0]
-    if foundClub and foundCompetition:
-        return render_template(
-            "booking.html", club=foundClub, competition=foundCompetition
-        )
+    try:
+        foundClub = [c for c in clubs if c["name"] == club][0]
+        foundCompetition = [
+            c for c in competitions if c["name"] == competition
+        ][0]
+    except IndexError:
+        # Logout needed. Given the competition name and/or the club name are
+        # unknown, the 'Book places' links will be wrong. Then, it must be
+        # properly intialized by login again.
+        flash("/!\\ Something went wrong ! You will be logout ...")
+        return render_template("messages.html"), 404
     else:
-        flash("Something went wrong-please try again")
-        return render_template(
-            "welcome.html", club=club, competitions=competitions
+        now = datetime.now()
+        competition_date = datetime.strptime(
+            foundCompetition["date"], "%Y-%m-%d %H:%M:%S"
         )
+        if competition_date > now:
+            return render_template(
+                "booking.html", club=foundClub, competition=foundCompetition
+            )
+        else:
+            flash(
+                f"/!\\ Sorry but the {foundCompetition['name']} competition \
+                  has already taken place !"
+            )
+            return (
+                render_template(
+                    "welcome.html",
+                    club=foundClub,
+                    competitions=competitions,
+                ),
+                403,
+            )
 
 
 @app.route("/purchasePlaces", methods=["POST"])
