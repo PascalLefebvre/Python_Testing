@@ -129,8 +129,8 @@ def purchasePlaces():
             )
             club["points"] = str(int(club["points"]) - placesRequired)
             flash(
-                f"Great-booking complete ! You booked {placesRequired} places \
-                  for the {competition['name']} competition."
+                f"Great-booking complete ! You have booked {placesRequired}\
+                  places for the {competition['name']} competition."
             )
         else:
             http_response_code = 403
@@ -141,7 +141,7 @@ def purchasePlaces():
     else:
         http_response_code = 403
         flash(
-            f"/!\\ Booking failure ! You want to book {placesRequired} places \
+            f"/!\\ Booking failure ! You wish to book {placesRequired} places \
               but you have only {club['points']} points."
         )
     return (

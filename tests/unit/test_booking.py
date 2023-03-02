@@ -1,3 +1,5 @@
+"""The unit tests for the booking app."""
+
 from booking.views import MAX_NUMBER_RESERVED_PLACES
 
 
@@ -20,7 +22,7 @@ class TestShowSummary:
         response = client.post("/showSummary", data=request_data)
         data = response.data.decode()
         assert response.status_code == 404
-        assert "Oups" in data
+        assert "The email address is unknown" in data
 
 
 class TestPurchasePlaces:
