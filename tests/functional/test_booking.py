@@ -37,7 +37,7 @@ class TestLoginFailure(LiveServerTestCase):
         )
         assert "The email address is unknown" in self.browser.page_source
 
-        time.sleep(2)
+        time.sleep(1)
         follow_link = self.browser.find_element(By.ID, "follow")
         follow_link.click()
         assert self.browser.current_url == "http://localhost:8943/"

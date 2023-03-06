@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<p><a href='{{ url_for("index") }}'>Retourner à la page d'accueil</a></p>
+<h3>Tableau d'affichage des points by GUDLFT !</h3>
+<h4>- Mis à jour le {{ date }} à {{ time }} -</h4>
+<br>
+
+<table>
+    <tr>
+        <th>Clubs</th>
+        <th>Points</th>
+    </tr>
+    {% for club in clubs %}
+    <tr>
+        <td>{{ club['name'] }}</td>
+        <td>{{ club['points'] }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+{% endblock content %}

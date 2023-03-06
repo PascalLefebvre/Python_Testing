@@ -8,9 +8,9 @@ def test_login_and_logout_are_successful(client, load_clubs):
 
     # Login a club with his email.
     login_data = {"email": load_clubs[0]["email"]}
-    response = client.post("/showSummary", data=login_data)
+    response = client.post("/show_summary", data=login_data)
     assert response.status_code == 200
-    assert response.request.path == "/showSummary"
+    assert response.request.path == "/show_summary"
 
     # Logout redirect to the login page.
     response = client.get("/logout", follow_redirects=True)
@@ -28,7 +28,7 @@ def test_login_and_booking_access_are_successful(
 
     # Login a club with his email.
     login_data = {"email": club["email"]}
-    response = client.post("/showSummary", data=login_data)
+    response = client.post("/show_summary", data=login_data)
     assert response.status_code == 200
     response_data = response.data.decode()
     assert "Competitions" in response_data
@@ -61,8 +61,8 @@ def test_places_booking_is_successful(client, load_clubs, load_competitions):
         "competition": competition,
         "places": "4",
     }
-    response = client.post("/purchasePlaces", data=request_data)
+    response = client.post("/purchase_places", data=request_data)
     response_data = response.data.decode()
     assert response.status_code == 200
-    assert response.request.path == "/purchasePlaces"
+    assert response.request.path == "/purchase_places"
     assert "Great-booking complete !" in response_data

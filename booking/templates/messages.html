@@ -6,12 +6,12 @@
     {% if messages %}
         <ul>
         {% for message in messages %}
-            <li>{{message}}</li>
+            <li>{{ message }}</li>
         {% endfor %}
         </ul>
-    {% endif%}
-{%endwith%}
+    {% endif %}
+{% endwith %}
 
-<p><a href="{{url_for('index')}}" id="follow">Continuer</a></p>
+<p><a href="{{ url_for('index') }}" id="follow">Continuer</a></p>
 
 {% endblock content %}
