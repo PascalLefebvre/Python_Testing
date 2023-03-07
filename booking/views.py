@@ -7,23 +7,22 @@ from dotenv import load_dotenv
 
 from booking import app
 
-
-MAX_NUMBER_RESERVED_PLACES = 12
-
 load_dotenv()
 app.secret_key = os.environ.get("SECRET_KEY", "something_special")
+
+MAX_NUMBER_RESERVED_PLACES = 12
 
 
 def load_clubs():
     with open("data/clubs.json") as c:
-        listOfClubs = json.load(c)["clubs"]
-        return listOfClubs
+        list_of_clubs = json.load(c)["clubs"]
+        return list_of_clubs
 
 
 def load_competitions():
     with open("data/competitions.json") as comps:
-        listOfCompetitions = json.load(comps)["competitions"]
-        return listOfCompetitions
+        list_of_competitions = json.load(comps)["competitions"]
+        return list_of_competitions
 
 
 competitions = load_competitions()
