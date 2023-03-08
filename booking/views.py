@@ -1,14 +1,12 @@
-import os
+"""Define the view functions that are mapped to the 'booking' application's \
+   route URLs."""
+
 from datetime import datetime
 import json
 
 from flask import render_template, request, redirect, flash, url_for
-from dotenv import load_dotenv
 
 from booking import app
-
-load_dotenv()
-app.secret_key = os.environ.get("SECRET_KEY", "something_special")
 
 MAX_NUMBER_RESERVED_PLACES = 12
 
